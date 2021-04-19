@@ -1,6 +1,6 @@
 FROM --platform=linux/x86_64 openjdk:8
 
-ENV HSQLDB_VERSION=2.3.0 \
+ENV HSQLDB_VERSION=2.3.1 \
     JAVA_VM_PARAMETERS= \
     HSQLDB_TRACE= \
     HSQLDB_SILENT= \
