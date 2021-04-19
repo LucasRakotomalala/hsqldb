@@ -1,8 +1,6 @@
-FROM blacklabelops/java:openjre8
-MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
+FROM --platform=linux/x86_64 openjdk:8
 
-# Image Environment Variables
-ENV HSQLDB_VERSION=2.4.0 \
+ENV HSQLDB_VERSION=2.3.0 \
     JAVA_VM_PARAMETERS= \
     HSQLDB_TRACE= \
     HSQLDB_SILENT= \
@@ -13,38 +11,29 @@ ENV HSQLDB_VERSION=2.4.0 \
     HSQLDB_USER= \
     HSQLDB_PASSWORD=
 
-RUN export CONTAINER_USER=hsql && \
-    export CONTAINER_UID=1000 && \
-    export CONTAINER_GROUP=hsql && \
-    export CONTAINER_GID=1000 && \
-    # Add user
-    addgroup -g $CONTAINER_GID $CONTAINER_GROUP && \
-    adduser -u $CONTAINER_UID -G $CONTAINER_GROUP -h /home/$CONTAINER_USER -s /bin/bash -S $CONTAINER_USER && \
-    # Install tooling
-    apk add --update \
+RUN apt-get update && \
+    apt-get install \
       ca-certificates \
       wget && \
-    # Install HSDLDB
     mkdir -p /opt/database && \
     mkdir -p /opt/hsqldb && \
-    mkdir -p /scripts && \
-    wget -O /opt/hsqldb/hsqldb.jar http://central.maven.org/maven2/org/hsqldb/hsqldb/${HSQLDB_VERSION}/hsqldb-${HSQLDB_VERSION}.jar && \
-    wget -O /opt/hsqldb/sqltool.jar http://central.maven.org/maven2/org/hsqldb/sqltool/${HSQLDB_VERSION}/sqltool-${HSQLDB_VERSION}.jar && \
-    chown -R $CONTAINER_UID:$CONTAINER_GID /opt/hsqldb /opt/database /scripts && \
-    # Remove obsolete packages
-    apk del \
-      ca-certificates \
-      wget && \
+    mkdir -p /scripts
+
+COPY entrypoint.sh /opt/hsqldb/entrypoint.sh
+
+RUN wget -O /opt/hsqldb/hsqldb.jar https://repo1.maven.org/maven2/org/hsqldb/hsqldb/${HSQLDB_VERSION}/hsqldb-${HSQLDB_VERSION}.jar && \
+    wget -O /opt/hsqldb/sqltool.jar https://repo1.maven.org/maven2/org/hsqldb/sqltool/${HSQLDB_VERSION}/sqltool-${HSQLDB_VERSION}.jar && \
+    apt-get autoremove --purge -y && \
+    apt-get clean && \
     # Clean caches and tmps
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/* && \
     rm -rf /var/log/*
 
-VOLUME ["/opt/database","/scripts"]
+VOLUME ["/opt/database"]
+
 EXPOSE 9001
 
-USER hsql
-WORKDIR /scripts
-COPY imagescripts/docker-entrypoint.sh /opt/hsqldb/docker-entrypoint.sh
-ENTRYPOINT ["/opt/hsqldb/docker-entrypoint.sh"]
+ENTRYPOINT ["/opt/hsqldb/entrypoint.sh"]
+
 CMD ["hsqldb"]

@@ -1,6 +1,6 @@
 # Docker Image with HSQLDB for Software Development.
 
-## Release: blacklabelops/hsqldb:latest
+## Release: furbor/hsqldb:latest
 
 Installed Software:
 
@@ -10,25 +10,14 @@ Installed Software:
 
 # Make It Short
 
-In short, use this image for starting and stopping a simple HSQLDB on your develeopment
+In short, use this image for starting and stopping a simple HSQLDB on your development
 environment.
 
 ~~~~
-$ docker run -d -p 9001:9001 --name hsqldb blacklabelops/hsqldb
+$ docker run -d -p 9001:9001 --name hsqldb furbor/hsqldb
 ~~~~
 
 > Will run hsqldb which will be accessible through jdbc URL: jdbc:hsqldb:hsql://localhost/test, Username: sa, Password :
-
-Recommended: Docker-Compose! Just curl the files and modify the environment-variables inside
-the .env-file.
-
-~~~~
-$ curl -O https://raw.githubusercontent.com/blacklabelops/hsqldb/master/docker-compose.yml
-$ curl -O https://raw.githubusercontent.com/blacklabelops/hsqldb/master/docker-compose.env
-$ docker-compose up -d
-~~~~
-
-> [docker-compose.env](https://github.com/blacklabelops/hsqldb/blob/master/docker-compose.env) contains a full list of environment variables.
 
 # Connect to HSQLDB
 
@@ -63,7 +52,7 @@ If you want to mount your script directory, then start a new container:
 $ docker run -it --rm \
   --link hsqldb:hsqldb \
 	-v $(pwd)/dbscripts:/scripts \
-	blacklabelops/hsqldb sqltool
+	furbor/hsqldb sqltool
 ~~~~
 
 > The folder /scripts is a Volume with the appropriate user permissions.
@@ -76,7 +65,7 @@ Boot2Docker: First start the server with the host environment variable:
 $ docker run -d --name hsqldb \
 	-e "HSQLDB_DATABASE_HOST=192.168.99.100" \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > The sqltool settings sqltool.rc will now include the correct host.
@@ -103,7 +92,7 @@ $ docker run -d --name hsqldb \
 	-e "HSQLDB_USER=sa" \
   -e "HSQLDB_PASSWORD=password" \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > Default container user is 'sa' and empty password!
@@ -120,7 +109,7 @@ Example:
 $ docker run -d --name hsqldb \
 	-e "HSQLDB_DATABASE_ALIAS=xdb" \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > The correct JDBC URL is now: jdbc:hsqldb:hsql://localhost/xdb
@@ -135,7 +124,7 @@ Example:
 $ docker run -d --name hsqldb \
 	-e "HSQLDB_DATABASE_NAME=hsqldb" \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > Database hsqldb will be available in folder /opt/database
@@ -150,7 +139,7 @@ Example:
 $ docker run -d --name hsqldb \
 	-v $(pwd)/database:/opt/database \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > pwd is a Linux directive!
@@ -173,7 +162,7 @@ $ docker run -d --name hsqldb \
   -e "HSQLDB_REMOTE=false" \
   -e "HSQLDB_DATABASE_HOST=192.168.99.100" \
   -p 9001:9001 \
-  blacklabelops/hsqldb
+  furbor/hsqldb
 ~~~~
 
 # Java-VM Parameters
@@ -184,7 +173,7 @@ You can define start up parameters for the Java Virtual Machine, e.g. setting th
 $ docker run -d --name hsqldb \
 	-e "JAVA_VM_PARAMETERS=-Xmx512m -Xms256m" \
 	-p 9001:9001 \
-	blacklabelops/hsqldb
+	furbor/hsqldb
 ~~~~
 
 > You will have to use Java 8 parameters: [JRE 8 Linux](http://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html).
@@ -195,4 +184,4 @@ $ docker run -d --name hsqldb \
 * [Docker Homepage](https://www.docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Docker Userguide](https://docs.docker.com/userguide/)
-* [Oracle Java8](https://java.com/de/download/)
+* [Oracle Java8](https://java.com/en/download/)
